@@ -31,7 +31,7 @@ class Bottom extends StatelessWidget {
             Tab(
               icon: Icon(Icons.save_alt, size: 18),
               child: Text(
-                '저장한 컨텐츠 목록',
+                '저장한 콘텐츠 목록',
                 style: TextStyle(fontSize: 8),
               ),
             ),
