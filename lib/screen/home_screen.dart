@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/model/model_movie.dart';
 import 'package:netflix_clone/widget/box_slider.dart';
@@ -12,47 +13,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Movie> movies = [
-    Movie.fromMap(
-      {
-        'title': '사랑의 불시착',
-        'keyword': '사랑/로맨스/판타지',
-        'poster': 'images/test_movie_1.png',
-        'like': false,
-      },
-    ),
-    Movie.fromMap(
-      {
-        'title': '사랑의 불시착',
-        'keyword': '사랑/로맨스/판타지',
-        'poster': 'images/test_movie_1.png',
-        'like': false,
-      },
-    ),
-    Movie.fromMap(
-      {
-        'title': '사랑의 불시착',
-        'keyword': '사랑/로맨스/판타지',
-        'poster': 'images/test_movie_1.png',
-        'like': false,
-      },
-    ),
-    Movie.fromMap(
-      {
-        'title': '사랑의 불시착',
-        'keyword': '사랑/로맨스/판타지',
-        'poster': 'images/test_movie_1.png',
-        'like': false,
-      },
-    ),
-  ];
+  // Firestore firestore = Firestore.instance; 예전코드(deprecated)
+  FirebaseFirestore firestore = FirebaseFirestore.instance; // 초기화
+  late Stream<QuerySnapshot> streamData;
+
   @override
   void initState() {
     super.initState();
+    streamData = firestore.collection('movie').snapshots();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _fechData(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('movie').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator();
+        }
+        return _buildBody(context, snapshot.data!.docs);
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<Movie> movies = snapshot.map((d) => Movie.fromSnapshot(d)).toList();
     return ListView(
       children: <Widget>[
         Stack(
@@ -76,6 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
     //     child: Text('homeScreen'),
     //   ),
     // );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _fechData(context);
   }
 }
 

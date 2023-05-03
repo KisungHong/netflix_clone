@@ -1,4 +1,4 @@
 {
-  "cSpell.words": ["bbongflix", "Flix"],
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "cSpell.words": ["bbongflix", "Firestore", "Flix"],
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
